@@ -8,62 +8,33 @@
       <option disabled value="">Selecciona una sub-raza</option>
       <option v-for="(subBreed, index) in dataSubBreed" :key="index">{{subBreed}}</option>
     </select>
-    <div class="image-content" v-for="(image, imageIndex) in paginatedData" :key="imageIndex">
-        <img :src="image" class="image" :key="imageIndex" />
-    </div>
-    <div class="content-button" v-if="!showButton">
-      <button @click="prevPage" :disabled="pageNumber == 0">
-        Anterior
-      </button>
-      <button @click="nextPage" :disabled="pageNumber >= pageCount - 1">
-        Siguiente
-      </button>
-    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'list',
-  props: ['listData', 'listImages'],
+  props: ['listData'],
   data () {
     return {
-      dataImages: [],
       dataBreed: [],
       dataSubBreed: [],
       breedSelected: '',
       subBreedSelected: '',
-      pageNumber: 0,
-      size: 2,
-      showButton: true,
       nameBreed: ''
-    }
-  },
-  computed: {
-    pageCount(){
-      let sizeData = this.dataImages.length;
-      let size = this.size;
-      return Math.ceil(sizeData/size);
-    },
-    paginatedData(){
-      let start = this.pageNumber * this.size;
-      let end = start + this.size;
-      return this.dataImages.slice(start, end);
     }
   },
   watch: {
     listData: function (val) {
       this.dataBreed = val;
     },
-    listImages: function (val){ 
-      this.showButton = false;
-      this.dataImages = val;
-    },
     breedSelected: function (val) {
       this.pageNumber = 0;
       let nameSubBreed = this.dataBreed[val];
       if(nameSubBreed.length > 0) {
         this.dataSubBreed = nameSubBreed;
+      }else{
+        this.dataSubBreed = [];
       }
       this.nameBreed = val;
       this.getNameBreeds(this.nameBreed);
